@@ -78,7 +78,7 @@ if __name__ == "__main__":
     #   hg
     #   yolov8s | yolov8m
     # ---------------------------------#
-    backbone = "hgnetv2l"
+    backbone = "efficientformerv2_s1"
     pp="transformer"
     #pp="ASPP"
     # ----------------------------------------------------------------------------------------------------------------------------#
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     #                       8下采样的倍数较小、理论上效果更好。
     #                       但也要求更大的显存
     # ---------------------------------------------------------#
-    downsample_factor = 16
+    downsample_factor = 8
     # ------------------------------#
     #   输入图片的大小
     # ------------------------------#
@@ -170,12 +170,12 @@ if __name__ == "__main__":
     #   Unfreeze_batch_size     模型在解冻后的batch_size
     # ------------------------------------------------------------------#
     UnFreeze_Epoch = 100
-    Unfreeze_batch_size = 8
+    Unfreeze_batch_size = 16
     # ------------------------------------------------------------------#
     #   Freeze_Train    是否进行冻结训练
     #                   默认先冻结主干训练后解冻训练。
     # ------------------------------------------------------------------#
-    Freeze_Train = True
+    Freeze_Train = False
 
     # ------------------------------------------------------------------#
     #   其它训练参数：学习率、优化器、学习率下降有关
@@ -273,13 +273,13 @@ if __name__ == "__main__":
     #   下载预训练权重
     # ----------------------------------------------------#
 
-    if pretrained:
-        if distributed:
-            if local_rank == 0:
-                download_weights(backbone)
-            dist.barrier()
-        else:
-            download_weights(backbone)
+    # if pretrained:
+    #     if distributed:
+    #         if local_rank == 0:
+    #             download_weights(backbone)
+    #         dist.barrier()
+    #     else:
+    #         download_weights(backbone)
 
 
     model = Labs(num_classes=num_classes, backbone=backbone, downsample_factor=downsample_factor,
