@@ -491,7 +491,7 @@ class EfficientFormerV2(nn.Module):
                  mlp_ratios=4, downsamples=None,
                  pool_size=3,
                  norm_layer=nn.BatchNorm2d, act_layer=nn.GELU,
-                 num_classes=1000,
+                 num_classes=2,
                  down_patch_size=3, down_stride=2, down_pad=1,
                  drop_rate=0., drop_path_rate=0.,
                  use_layer_scale=True, layer_scale_init_value=1e-5,
