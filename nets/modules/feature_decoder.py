@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from nets.modules.block import NAMAttention
 
 from nets.modules import AIFI,Conv,TransformerLayer
 class ASPP(nn.Module):
@@ -81,10 +82,11 @@ class TransEnc(nn.Module):
         self.branch5_relu = nn.ReLU(inplace=True)
         self.conv_cat = nn.Sequential(
             # TransformerLayer(dim_out*6, 8, dim_out),
-            nn.Conv2d(736, dim_out, 1, 1, padding=0, bias=True),
+            nn.Conv2d(688, dim_out, 1, 1, padding=0, bias=True),
             nn.BatchNorm2d(dim_out, momentum=bn_mom),
             nn.ReLU(inplace=True),
         )
+        self.att = NAMAttention(688)
 
     def forward(self, x):
         [b, c, row, col] = x.size()
@@ -100,5 +102,6 @@ class TransEnc(nn.Module):
         global_feature = F.interpolate(global_feature, (row, col), None, 'bilinear', True)
 
         feature_cat = torch.cat([x0,x1, global_feature], dim=1)
-        result = self.conv_cat(feature_cat)
+        attres = self.att(feature_cat)
+        result = self.conv_cat(attres)
         return result

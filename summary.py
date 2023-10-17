@@ -13,7 +13,7 @@ if __name__ == "__main__":
     backbone        = 'efficientformerv2_s0'
     head            = 'transformer'
     device  = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model   = Labs(num_classes=num_classes, backbone=backbone,header=head, downsample_factor=16, pretrained=False).to(device)
+    model   = Labs(num_classes=num_classes, backbone=backbone,header=head, downsample_factor=16, pretrained=False,use_c2f=True).to(device)
     summary(model, (3, input_shape[0], input_shape[1]))
     
     dummy_input     = torch.randn(1, 3, input_shape[0], input_shape[1]).to(device)

@@ -78,7 +78,7 @@ if __name__ == "__main__":
     #   hg
     #   yolov8s | yolov8m
     # ---------------------------------#
-    backbone = "efficientformerv2_s1"
+    backbone = "efficientformerv2_s0"
     pp="transformer"
     #pp="ASPP"
     # ----------------------------------------------------------------------------------------------------------------------------#
@@ -169,7 +169,7 @@ if __name__ == "__main__":
     #   UnFreeze_Epoch          模型总共训练的epoch
     #   Unfreeze_batch_size     模型在解冻后的batch_size
     # ------------------------------------------------------------------#
-    UnFreeze_Epoch = 100
+    UnFreeze_Epoch = 90
     Unfreeze_batch_size = 16
     # ------------------------------------------------------------------#
     #   Freeze_Train    是否进行冻结训练
@@ -283,7 +283,7 @@ if __name__ == "__main__":
 
 
     model = Labs(num_classes=num_classes, backbone=backbone, downsample_factor=downsample_factor,
-                    pretrained=pretrained, header=pp)
+                    pretrained=pretrained, header=pp, use_c2f=True)
     if not pretrained:
         weights_init(model)
     if model_path != '':
