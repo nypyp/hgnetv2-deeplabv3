@@ -78,7 +78,7 @@ if __name__ == "__main__":
     #   hg
     #   yolov8s | yolov8m
     # ---------------------------------#
-    backbone = "efficientformerv2_s1"
+    backbone = "efficientformerv2_s2"
     pp="transformer"
     #pp="ASPP"
     # ----------------------------------------------------------------------------------------------------------------------------#

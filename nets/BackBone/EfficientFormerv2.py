@@ -503,7 +503,7 @@ class EfficientFormerV2(nn.Module):
         super().__init__()
 
         self.low_ch = 32
-        self.feature_ch = 224
+        self.feature_ch = 288
         if not fork_feat:
             self.num_classes = num_classes
         self.fork_feat = fork_feat
@@ -649,17 +649,17 @@ if __name__ == '__main__':
     model = efficientformerv2_s0()
     low_featrue, res = model(inputs)
     #print(low_feature.size())
-    print(res.size())
+    print(res.size())#([1,176,16,16])
         
     
     model = efficientformerv2_s1('/home/nypyp/code/hgnetv2-deeplabv3/model_data/eformer_s1_450.pth')
     low_featrue, res = model(inputs)
-    print(res.size())
+    print(res.size())#([1,224,16,16])
     
     model = efficientformerv2_s2('/home/nypyp/code/hgnetv2-deeplabv3/model_data/eformer_s2_450.pth')
     low_featrue, res = model(inputs)
-    print(res.size())
+    print(res.size())#([1,288,16,16])
     
     model = efficientformerv2_l('/home/nypyp/code/hgnetv2-deeplabv3/model_data/eformer_l_450.pth')
     low_featrue, res = model(inputs)
-    print(res.size())
+    print(res.size())#([1,384,16,16])
