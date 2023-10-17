@@ -81,7 +81,7 @@ class TransEnc(nn.Module):
         self.branch5_relu = nn.ReLU(inplace=True)
         self.conv_cat = nn.Sequential(
             # TransformerLayer(dim_out*6, 8, dim_out),
-            nn.Conv2d(800, dim_out, 1, 1, padding=0, bias=True),
+            nn.Conv2d(736, dim_out, 1, 1, padding=0, bias=True),
             nn.BatchNorm2d(dim_out, momentum=bn_mom),
             nn.ReLU(inplace=True),
         )

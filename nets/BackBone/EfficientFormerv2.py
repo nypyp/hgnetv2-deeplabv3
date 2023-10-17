@@ -502,8 +502,8 @@ class EfficientFormerV2(nn.Module):
                  **kwargs):
         super().__init__()
 
-        self.low_ch = 32
-        self.feature_ch = 288
+        self.low_ch = 48
+        self.feature_ch = 224
         if not fork_feat:
             self.num_classes = num_classes
         self.fork_feat = fork_feat
@@ -563,7 +563,7 @@ class EfficientFormerV2(nn.Module):
             if self.fork_feat and idx in self.out_indices:
                 norm_layer = getattr(self, f'norm{idx}')
                 x_out = norm_layer(x)
-                if idx == 0:
+                if idx == 2:
                     low_feature = x_out
                 outs.append(x_out)
         return  low_feature, x_out   
@@ -648,18 +648,21 @@ if __name__ == '__main__':
     
     model = efficientformerv2_s0()
     low_featrue, res = model(inputs)
-    #print(low_feature.size())
+    print(low_featrue.size())#([1, 48, 64, 64])
     print(res.size())#([1,176,16,16])
         
     
     model = efficientformerv2_s1('/home/nypyp/code/hgnetv2-deeplabv3/model_data/eformer_s1_450.pth')
     low_featrue, res = model(inputs)
+    print(low_featrue.size())#([1, 48, 64, 64])
     print(res.size())#([1,224,16,16])
     
     model = efficientformerv2_s2('/home/nypyp/code/hgnetv2-deeplabv3/model_data/eformer_s2_450.pth')
     low_featrue, res = model(inputs)
+    print(low_featrue.size())#([1, 64, 64, 64])
     print(res.size())#([1,288,16,16])
     
     model = efficientformerv2_l('/home/nypyp/code/hgnetv2-deeplabv3/model_data/eformer_l_450.pth')
     low_featrue, res = model(inputs)
+    print(low_featrue.size())#([1, 80, 64, 64])
     print(res.size())#([1,384,16,16])

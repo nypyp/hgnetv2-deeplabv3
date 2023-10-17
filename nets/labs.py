@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import sys
-from nets.BackBone import mobilenetv3s, mobilenetv3l, hgnetv2l, hgnetv2x, xception, mobilenetv2, efficientformerv2_s1,efficientformerv2_s2
+from nets.BackBone import mobilenetv3s, mobilenetv3l, hgnetv2l, hgnetv2x, xception, mobilenetv2, efficientformerv2_s0, efficientformerv2_s1,efficientformerv2_s2
 from nets.Head import aspp,transformer
 try:
     from nets.BackBone import yolov8m, yolov8s
@@ -22,7 +22,7 @@ class Labs(nn.Module):
         header=header.lower()
         mod = sys.modules[__name__]
         backbone_list = ["mobilenetv2", "mobilenetv3s", "mobilenetv3l",
-                         'hgnetv2l', 'hgnetv2x', 'yolov8m', 'yolov8s', 'xception','efficientformerv2_s1','efficientformerv2_s2']
+                         'hgnetv2l', 'hgnetv2x', 'yolov8m', 'yolov8s', 'xception','efficientformerv2_s0','efficientformerv2_s1','efficientformerv2_s2']
 
         headlist = ["aspp", "transformer"]
         if (backbone not in backbone_list) and hasattr(mod, backbone):
