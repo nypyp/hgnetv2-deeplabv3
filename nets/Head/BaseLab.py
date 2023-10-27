@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from nets.modules.feature_decoder import TransEnc
-from nets.modules.block import C2f,C2TR,DySnakeConv,ScConv
+from nets.modules.block import C2f,C2TR,DySnakeConv,ScConv,ACmix
 
 class BaseLabHeader(nn.Module):
     def __init__(self, H, W, num_classes: int, low_f_ch: int, f_ch: int, downsample_factor=16, *args,
@@ -12,7 +12,8 @@ class BaseLabHeader(nn.Module):
         use_c2f=kwargs.get("use_c2f",False)
         self.size = (H, W)
         self.shortcut_conv = nn.Sequential(
-            DySnakeConv(low_f_ch,low_f_ch),
+            #DySnakeConv(low_f_ch,low_f_ch),
+            #ACmix(low_f_ch,low_f_ch),
             nn.Conv2d(low_f_ch, 48, 1),
             nn.BatchNorm2d(48),
             nn.ReLU(inplace=True)

@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from nets.modules.block import NAMAttention
+from nets.modules.block import NAMAttention,StripPooling,ACmix,GAMAttention,DySnakeConv 
 
 from nets.modules import AIFI,Conv,TransformerLayer
 class ASPP(nn.Module):
@@ -36,6 +36,7 @@ class ASPP(nn.Module):
             nn.BatchNorm2d(dim_out, momentum=bn_mom),
             nn.ReLU(inplace=True),
         )
+        self.att = NAMAttention(dim_out*5)
 
     def forward(self, x):
         [b, c, row, col] = x.size()
@@ -49,8 +50,9 @@ class ASPP(nn.Module):
         # -----------------------------------------#
         #   第五个分支，全局平均池化+卷积
         # -----------------------------------------#
-        global_feature = torch.mean(x, 2, True)
-        global_feature = torch.mean(global_feature, 3, True)
+        global_feature = StripPooling(x,(2,3),nn.BatchNorm2d,False)
+        # global_feature = torch.mean(x, 2, True)
+        # global_feature = torch.mean(global_feature, 3, True)
         global_feature = self.branch5_conv(global_feature)
         global_feature = self.branch5_bn(global_feature)
         global_feature = self.branch5_relu(global_feature)
@@ -61,7 +63,8 @@ class ASPP(nn.Module):
         #   然后1x1卷积整合特征。
         # -----------------------------------------#
         feature_cat = torch.cat([conv1x1, conv3x3_1, conv3x3_2, conv3x3_3, global_feature], dim=1)
-        result = self.conv_cat(feature_cat)
+        attres = self.att(feature_cat)
+        result = self.conv_cat(attres)
         return result
 
 
@@ -72,6 +75,7 @@ class TransEnc(nn.Module):
         super().__init__()
         self.branch1 = nn.Sequential(
             nn.Conv2d(dim_in, dim_out, 1, 1, padding=0, dilation=rate, bias=True),
+            
             nn.BatchNorm2d(dim_out, momentum=bn_mom),
             nn.ReLU(inplace=True),
         )
@@ -86,14 +90,18 @@ class TransEnc(nn.Module):
             nn.BatchNorm2d(dim_out, momentum=bn_mom),
             nn.ReLU(inplace=True),
         )
-        self.att = NAMAttention(688)
+        self.att = NAMAttention(688,no_spatial=False,h_w=256)
+        #self.att = ACmix(736,736)
+        #self.att = GAMAttention(688,688)
+        #self.strpool = StripPooling(dim_in,(16,16),nn.BatchNorm2d,{'mode': 'bilinear', 'align_corners': True})
 
     def forward(self, x):
         [b, c, row, col] = x.size()
         x0=self.branch1(x)
         x1=self.__AIFI(x)
+        #print(row,col)
         # x1=self.__tflayer(x1)
-
+        #global_feature = self.strpool(x)
         global_feature = torch.mean(x, 2, True)
         global_feature = torch.mean(global_feature, 3, True)
         global_feature = self.branch5_conv(global_feature)

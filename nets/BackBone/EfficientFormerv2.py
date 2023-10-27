@@ -11,6 +11,7 @@ from typing import Dict
 import itertools
 import numpy as np
 from timm.models.layers import DropPath, trunc_normal_, to_2tuple
+from nets.modules.block import AFF
 
 __all__ = ['efficientformerv2_s0', 'efficientformerv2_s1', 'efficientformerv2_s2', 'efficientformerv2_l']
 
@@ -502,7 +503,7 @@ class EfficientFormerV2(nn.Module):
                  **kwargs):
         super().__init__()
 
-        self.low_ch = 48
+        self.low_ch = 32
         self.feature_ch = 176
         if not fork_feat:
             self.num_classes = num_classes
@@ -554,8 +555,12 @@ class EfficientFormerV2(nn.Module):
                     layer = norm_layer(embed_dims[i_emb])
                 layer_name = f'norm{i_layer}'
                 self.add_module(layer_name, layer)
+        self.aff = AFF(32)
+        self.conv = nn.Conv2d(48, 32, kernel_size=1)
+        self.bn = nn.BatchNorm2d(32)
         self.channel = [i.size(1) for i in self.forward(torch.randn(1, 3, resolution, resolution))[1]]
         
+
     def forward_tokens(self, x):
         outs = []
         for idx, block in enumerate(self.network):
@@ -563,8 +568,14 @@ class EfficientFormerV2(nn.Module):
             if self.fork_feat and idx in self.out_indices:
                 norm_layer = getattr(self, f'norm{idx}')
                 x_out = norm_layer(x)
-                if idx == 2:
+                if idx == 0:
                     low_feature = x_out
+                # if idx == 2:
+                #     low2 = x_out
+                #     low2 = F.interpolate(low2, (low_feature.shape[2],low_feature.shape[3]), None, 'bilinear', True)
+                #     low2 = self.conv(low2)
+                #     low2 = self.bn(low2)
+                #     afflow = self.aff(low_feature,low2)
                 outs.append(x_out)
         return  low_feature, x_out   
 
