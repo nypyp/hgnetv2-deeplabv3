@@ -504,7 +504,7 @@ class EfficientFormerV2(nn.Module):
         super().__init__()
 
         self.low_ch = 32
-        self.feature_ch = 176
+        self.feature_ch = 120 # s0: 96 s1:120 s2:144
         if not fork_feat:
             self.num_classes = num_classes
         self.fork_feat = fork_feat

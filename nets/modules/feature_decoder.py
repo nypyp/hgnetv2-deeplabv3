@@ -90,7 +90,7 @@ class TransEnc(nn.Module):
             nn.BatchNorm2d(dim_out, momentum=bn_mom),
             nn.ReLU(inplace=True),
         )
-        self.att = NAMAttention(dim_out*2+dim_in,no_spatial=False,h_w=256)
+        self.att = NAMAttention(dim_out*2+dim_in,no_spatial=False,h_w=1024)
         #self.att = ACmix(736,736)
         #self.att = GAMAttention(688,688)
         #self.strpool = StripPooling(dim_in,(16,16),nn.BatchNorm2d,{'mode': 'bilinear', 'align_corners': True})
