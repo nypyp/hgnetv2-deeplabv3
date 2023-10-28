@@ -9,7 +9,7 @@ from nets.labs import Labs
 
 if __name__ == "__main__":
     input_shape     = [512, 512]
-    num_classes     = 21
+    num_classes     = 2
     backbone        = 'efficientformerv2_s0'
     head            = 'transformer'
     device  = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

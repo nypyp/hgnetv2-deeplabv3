@@ -86,11 +86,11 @@ class TransEnc(nn.Module):
         self.branch5_relu = nn.ReLU(inplace=True)
         self.conv_cat = nn.Sequential(
             # TransformerLayer(dim_out*6, 8, dim_out),
-            nn.Conv2d(688, dim_out, 1, 1, padding=0, bias=True),
+            nn.Conv2d(dim_out*2+dim_in, dim_out, 1, 1, padding=0, bias=True),
             nn.BatchNorm2d(dim_out, momentum=bn_mom),
             nn.ReLU(inplace=True),
         )
-        self.att = NAMAttention(688,no_spatial=False,h_w=256)
+        self.att = NAMAttention(dim_out*2+dim_in,no_spatial=False,h_w=256)
         #self.att = ACmix(736,736)
         #self.att = GAMAttention(688,688)
         #self.strpool = StripPooling(dim_in,(16,16),nn.BatchNorm2d,{'mode': 'bilinear', 'align_corners': True})

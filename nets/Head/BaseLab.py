@@ -13,7 +13,7 @@ class BaseLabHeader(nn.Module):
         self.size = (H, W)
         self.shortcut_conv = nn.Sequential(
             #DySnakeConv(low_f_ch,low_f_ch),
-            #ACmix(low_f_ch,low_f_ch),
+            ACmix(low_f_ch,low_f_ch),
             nn.Conv2d(low_f_ch, 48, 1),
             nn.BatchNorm2d(48),
             nn.ReLU(inplace=True)

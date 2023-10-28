@@ -570,14 +570,15 @@ class EfficientFormerV2(nn.Module):
                 x_out = norm_layer(x)
                 if idx == 0:
                     low_feature = x_out
-                # if idx == 2:
+                if idx == 4:
+                    hight_feature = x_out
                 #     low2 = x_out
                 #     low2 = F.interpolate(low2, (low_feature.shape[2],low_feature.shape[3]), None, 'bilinear', True)
                 #     low2 = self.conv(low2)
                 #     low2 = self.bn(low2)
                 #     afflow = self.aff(low_feature,low2)
                 outs.append(x_out)
-        return  low_feature, x_out   
+        return  low_feature, hight_feature  
 
     def forward(self, x):
         x = self.patch_embed(x)
